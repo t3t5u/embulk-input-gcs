@@ -63,6 +63,9 @@ public class GcsFileInput
         try {
             // @see https://cloud.google.com/storage/docs/json_api/v1/objects/list
             Page<Blob> blobs = client.list(bucket, Storage.BlobListOption.prefix(prefix), Storage.BlobListOption.pageToken(lastKey));
+            if (task.getStopWhenFileNotFound() && !fileExists(blobs)) {
+                throw new ConfigException("No file is found. \"stop_when_file_not_found\" option is \"true\".");
+            }
             for (Blob blob : blobs.iterateAll()) {
                 if (blob.getSize() > 0) {
                     builder.add(blob.getName(), blob.getSize());
@@ -70,6 +73,9 @@ public class GcsFileInput
                 LOG.debug("filename: {}", blob.getName());
                 LOG.debug("updated: {}", blob.getUpdateTime());
             }
+        }
+        catch (ConfigException e) {
+            throw new ConfigException(e.getMessage());
         }
         catch (RuntimeException e) {
             if ((e instanceof StorageException) && ((StorageException) e).getCode() == 400) {
@@ -120,5 +126,15 @@ public class GcsFileInput
         LOG.debug("bucket location: {}", bk.getLocation());
         LOG.debug("bucket timeCreated: {}", bk.getCreateTime());
         LOG.debug("bucket owner: {}", bk.getOwner());
+    }
+
+    private static boolean fileExists(Page<Blob> blobs)
+    {
+        for (Blob blob : blobs.iterateAll()) {
+            if (!blob.getName().endsWith("/")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -33,6 +33,10 @@ public interface PluginTask
     @ConfigDefault("[]")
     List<String> getPathFiles();
 
+    @Config("stop_when_file_not_found")
+    @ConfigDefault("false")
+    boolean getStopWhenFileNotFound();
+
     FileList getFiles();
     void setFiles(FileList files);
 }

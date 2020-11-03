@@ -49,6 +49,7 @@ embulk run /path/to/config.yml
 - **p12_keyfile** fullpath of p12 key (string, required when auth_method is private_key)
 - **json_keyfile** fullpath of json_key (string, required when auth_method is json_key)
 - **application_name** application name anything you like (string, optional)
+- **stop_when_file_not_found**: if true, check existence of files (boolean, default false)
 
 ## Example
 
