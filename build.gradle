@@ -6,6 +6,7 @@ plugins {
     id "maven-publish"
     id "org.embulk.embulk-plugins" version "0.4.2"
     id "com.github.johnrengelman.shadow" version "5.2.0" apply false
+    id "com.palantir.git-version" version "3.0.0"
 }
 
 configurations {
@@ -21,7 +22,14 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = "org.embulk"
-version = "0.4.1-SNAPSHOT"
+version = {
+    def vd = versionDetails()
+    if (vd.commitDistance == 0 && vd.lastTag ==~ /^[0-9]+\.[0-9]+\.[0-9]+([.-][.a-zA-Z0-9-]+)?/) {
+        vd.lastTag
+    } else {
+        "0.0.0.${vd.gitHash}"
+    }
+}()
 description = "Reads files stored on Google Cloud Storage."
 
 tasks.withType(JavaCompile) {

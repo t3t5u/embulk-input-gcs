@@ -377,7 +377,8 @@ public class TestGcsFileInputPlugin
     }
 
     @Test
-    public void testGcsFileInputByOpen() throws IOException {
+    public void testGcsFileInputByOpen() throws IOException
+    {
         ConfigSource config = CONFIG_MAPPER_FACTORY.newConfigSource()
                 .set("type", "gcs")
                 .set("bucket", GCP_BUCKET)
@@ -435,7 +436,8 @@ public class TestGcsFileInputPlugin
             implements FileInputPlugin.Control
     {
         @Override
-        public List<TaskReport> run(TaskSource taskSource, int taskCount) {
+        public List<TaskReport> run(TaskSource taskSource, int taskCount)
+        {
             return ImmutableList.of(CONFIG_MAPPER_FACTORY.newTaskReport());
         }
     }
@@ -467,7 +469,8 @@ public class TestGcsFileInputPlugin
         return builder.build();
     }
 
-    private void assertRecords(Path tempFile) throws IOException {
+    private void assertRecords(Path tempFile) throws IOException
+    {
         InputStream in = new FileInputStream(tempFile.toFile());
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         List<String[]> records = new ArrayList<>();
